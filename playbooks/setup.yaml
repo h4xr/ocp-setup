@@ -1,0 +1,8 @@
+---
+- hosts: nodes
+  remote_user: root
+  roles:
+    - common
+    - prepare-scp
+    - setup-scp
+...

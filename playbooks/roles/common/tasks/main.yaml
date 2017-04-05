@@ -1,0 +1,12 @@
+---
+  # Get the public ip setup on VMs
+  - name: Assign Public IP
+    command: dhclient eth0
+    ignore_errors: True
+  - name: Retrieve the assigned public ip
+    shell:
+      ifconfig | grep -A 1 'eth0' | tail -1 | cut -d' ' -f10
+    register: ip
+  - debug:
+      var: ip.stdout
+...

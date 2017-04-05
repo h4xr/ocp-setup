@@ -1,0 +1,20 @@
+---
+  # Copy automation scripts
+  - name: Copy automation scripts
+    copy:
+      src: /root/aos-ansible_pradeep
+      dest: /root
+  # Deploy yum repo
+  - name: Deploy yum repo
+    copy:
+     src: /etc/yum.repos.d/RH7-RHAOS-3.4.repo
+     dest: /etc/yum.repos.d/RH7-RHAOS-3.4.repo
+  # Install openshift packages
+  - name: Install openshift packages
+    yum:
+      package: "{{ item }}"
+      state: present
+    with_items:
+      - atomic-openshift-master
+      - atomic-openshift-node
+...

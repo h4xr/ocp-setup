@@ -1,0 +1,30 @@
+---
+  # Configure inventory
+  - name: Add server to the node
+    lineinfile:
+      dest: /root/aos-ansible_pradeep/inventory/hosts
+      line: "{{ ip.stdout }}"
+      insertafter: "[nodes]"
+  - name: Generate SSh Key
+    shell:
+      ssh-keygen -t rsa -N "" -f /root/.ssh/id_rsa
+    ignore_errors: True
+  - name: Install sshpass
+    yum:
+     package: "{{ item }}"
+     state: present
+    with_items:
+      - sshpass
+  - name: Deploy key to localhost
+    shell:
+      sshpass -p "100yard-" ssh-copy-id -i /root/.ssh/id_rsa -o StrictHostKeyChecking=no "root@{{ ip.stdout }}"
+    register: deploy
+  - debug:
+      var: deploy
+  - name: Time ansible aws setup
+    shell:
+      time ansible-playbook -i /root/aos-ansible_pradeep/inventory/hosts /root/aos-ansible_pradeep/playbooks/aws_install_prep.yml
+    register: timed
+  - debug:
+      var: timed 
+...
